@@ -185,3 +185,8 @@ void mydisplay_update(){
 
     display.display();
 }
+
+void mydisplay_sleep(){
+    display.clearDisplay();
+    display.display();
+}

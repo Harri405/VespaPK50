@@ -4,15 +4,14 @@
 #include <mydisplay.h>
 #define SPLASH_DELAY 2
 
+bool button = false;
+
 void debug();
+void buttonPress();
 
 void Task_10ms(void *parameter) {
   while(1){
     vTaskDelay(10 / portTICK_PERIOD_MS);
-    if (digitalRead(GPIO_NUM_23)==HIGH){
-      esp_sleep_enable_timer_wakeup(5000 / portTICK_PERIOD_MS);
-      esp_deep_sleep_start();
-    }
   }
 }
 
@@ -49,7 +48,8 @@ void Task_5000ms(void *parameter) {
 
 
 void setup() {
-  pinMode(GPIO_NUM_23, INPUT);  // sets the digital pin 13 as output
+  pinMode(GPIO_NUM_15, INPUT_PULLDOWN);  // sets the digital pin 13 as output
+  attachInterrupt(GPIO_NUM_15,buttonPress,RISING);
   mydisplay_setup();
   mysensors_setup();
   
@@ -100,6 +100,16 @@ void debug(){
   //print_thermo();
 }
 
+void IRAM_ATTR buttonPress(){
+  detachInterrupt(GPIO_NUM_15);
+  button = true;
+}
+
 void loop() {
   vTaskDelay(2000);
+  if (button == true){
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, RISING);
+    mydisplay_sleep();
+    esp_deep_sleep_start();
   }
+}
