@@ -2,9 +2,8 @@
 #include <Adafruit_Sensor.h>
 #include <adafruit_GFX.h> 
 #include <Adafruit_SSD1306.h>
-#include <mydisplay.h>
-#include <mysensors.h>
-#include "esp_sleep.h"
+#include <display.h>
+#include <sensors.h>
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -12,10 +11,10 @@
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 
 
-const char strHello[] = "Hello World!";
+const char str_hello[] = "Hello World!";
 int16_t x=0;
 int16_t y=20;
-uint16_t textWidth, textHeight;
+uint16_t text_width, text_height;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // 'vespa_splash', 128x64px
@@ -86,7 +85,7 @@ const unsigned char vespa_splash [] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-void mydisplay_setup(){
+void display_setup(){
     Serial.println("# Setup Display #");
     // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -97,11 +96,9 @@ void mydisplay_setup(){
     display.clearDisplay();
     display.drawBitmap(0,0,vespa_splash,128,64,WHITE);
     display.display();
-    //delay(3000);
-    //gpio_wakeup_enable(GPIO_NUM_23,GPIO_INTR_HIGH_LEVEL);
   }
 
-void mydisplay_hello(){
+void display_hello(){
     bool static first_time=true;
     if(first_time){
         display.clearDisplay();
@@ -109,23 +106,23 @@ void mydisplay_hello(){
         display.setTextSize(1);
         display.setTextColor(WHITE, BLACK);
         // Measure the text with those parameters
-        display.getTextBounds(strHello, 0, 0, &x, &y, &textWidth, &textHeight);
+        display.getTextBounds(str_hello, 0, 0, &x, &y, &text_width, &text_height);
         // Print out the string
         first_time=false;
     }
     display.clearDisplay();
-    if (x+textWidth < SCREEN_WIDTH){
+    if (x+text_width < SCREEN_WIDTH){
     x++;
     }
     else{
     x=0;
     }
-    display.setCursor(x,display.height() / 2 - textHeight / 2);
-    display.print(strHello);
+    display.setCursor(x,display.height() / 2 - text_height / 2);
+    display.print(str_hello);
     display.display();
 }
 
-void mydisplay_update(){
+void display_update(){
     int rtc_x=0;
     int rtc_y=0;
     int dht_x=0;
@@ -186,7 +183,7 @@ void mydisplay_update(){
     display.display();
 }
 
-void mydisplay_sleep(){
+void display_sleep(){
     display.clearDisplay();
     display.display();
 }

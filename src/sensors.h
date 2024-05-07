@@ -1,6 +1,6 @@
 
-#ifndef MYSENSORS_H
-#define MYSENSORS_H
+#ifndef SENSORS_H
+#define SENSORS_H
 
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
@@ -18,9 +18,9 @@ extern float dht_temp;
 extern float dht_hum;
 extern DateTime time_now;
 
-void mysensors_setup();
+void sensors_setup();
 void print_time();
 void print_dht();
 void print_thermo();
 
-#endif //MYSENSORS_H
+#endif //sensors_H

@@ -1,14 +1,14 @@
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
-#include <mysensors.h>
-#include <mydisplay.h>
+#include <sensors.h>
+#include <display.h>
 #define SPLASH_DELAY 2
 
 bool button = false;
-TaskHandle_t Handle_10ms;
-TaskHandle_t Handle_500ms;
-TaskHandle_t Handle_1000ms;
-TaskHandle_t Handle_5000ms;
+TaskHandle_t handle_10ms;
+TaskHandle_t handle_500ms;
+TaskHandle_t handle_1000ms;
+TaskHandle_t handle_5000ms;
 
 void debug();
 void buttonPress();
@@ -25,7 +25,7 @@ void Task_500ms(void *parameter) {
       vTaskDelay(500 / portTICK_PERIOD_MS);
       thermo_temp=thermocouple.readCelsius();
       if(splash_delay > SPLASH_DELAY){
-        mydisplay_update();
+        display_update();
       }
       else{
         splash_delay++;
@@ -54,8 +54,8 @@ void Task_5000ms(void *parameter) {
 void setup() {
   pinMode(GPIO_NUM_15, INPUT_PULLDOWN);  // sets the digital pin 13 as output
   attachInterrupt(GPIO_NUM_15,buttonPress,RISING);
-  mydisplay_setup();
-  mysensors_setup();
+  display_setup();
+  sensors_setup();
   
   xTaskCreatePinnedToCore (
     Task_10ms,     // Function to implement the task
@@ -63,7 +63,7 @@ void setup() {
     1536,      // Stack size in words
     NULL,      // Task input parameter
     0,         // Priority of the task
-    &Handle_10ms,      // Task handle.
+    &handle_10ms,      // Task handle.
     1         // Core where the task should run
   );
 
@@ -73,7 +73,7 @@ void setup() {
     1536,      // Stack size in words
     NULL,      // Task input parameter
     1,         // Priority of the task
-    &Handle_500ms,      // Task handle.
+    &handle_500ms,      // Task handle.
     1         // Core where the task should run
   );
 
@@ -83,7 +83,7 @@ void setup() {
     1536,      // Stack size in words
     NULL,      // Task input parameter
     2,         // Priority of the task
-    &Handle_1000ms,      // Task handle.
+    &handle_1000ms,      // Task handle.
     1         // Core where the task should run
   );
 
@@ -93,7 +93,7 @@ void setup() {
   1024,      // Stack size in words
   NULL,      // Task input parameter
   0,         // Priority of the task
-  &Handle_5000ms,      // Task handle.
+  &handle_5000ms,      // Task handle.
   1         // Core where the task should run
   );
 }
@@ -112,11 +112,11 @@ void IRAM_ATTR buttonPress(){
 void loop() {
   if (button == true){
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, RISING);
-    vTaskSuspend(Handle_10ms);
-    vTaskSuspend(Handle_500ms);
-    vTaskSuspend(Handle_1000ms);
-    vTaskSuspend(Handle_5000ms);
-    mydisplay_sleep();
+    vTaskSuspend(handle_10ms);
+    vTaskSuspend(handle_500ms);
+    vTaskSuspend(handle_1000ms);
+    vTaskSuspend(handle_5000ms);
+    display_sleep();
     delay(500);
     esp_deep_sleep_start();
   }

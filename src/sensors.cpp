@@ -1,4 +1,4 @@
-#include <mysensors.h>
+#include <sensors.h>
 
 #define DHTTYPE DHT22
 #define PIN_DHT22 4
@@ -20,7 +20,7 @@ float dht_temp=0;
 float dht_hum=0;
 DateTime time_now;
 
-void mysensors_setup(){
+void sensors_setup(){
     uint tries = 0;
     Serial.begin(115200);
     Serial.println("Setup Sensors");
