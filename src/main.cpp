@@ -5,6 +5,10 @@
 #define SPLASH_DELAY 2
 
 bool button = false;
+TaskHandle_t Handle_10ms;
+TaskHandle_t Handle_500ms;
+TaskHandle_t Handle_1000ms;
+TaskHandle_t Handle_5000ms;
 
 void debug();
 void buttonPress();
@@ -59,7 +63,7 @@ void setup() {
     1536,      // Stack size in words
     NULL,      // Task input parameter
     0,         // Priority of the task
-    NULL,      // Task handle.
+    &Handle_10ms,      // Task handle.
     1         // Core where the task should run
   );
 
@@ -68,8 +72,8 @@ void setup() {
     "Task_500ms",   // Name of the taske
     1536,      // Stack size in words
     NULL,      // Task input parameter
-    2,         // Priority of the task
-    NULL,      // Task handle.
+    1,         // Priority of the task
+    &Handle_500ms,      // Task handle.
     1         // Core where the task should run
   );
 
@@ -78,8 +82,8 @@ void setup() {
     "Task_1000ms",   // Name of the taske
     1536,      // Stack size in words
     NULL,      // Task input parameter
-    0,         // Priority of the task
-    NULL,      // Task handle.
+    2,         // Priority of the task
+    &Handle_1000ms,      // Task handle.
     1         // Core where the task should run
   );
 
@@ -89,7 +93,7 @@ void setup() {
   1024,      // Stack size in words
   NULL,      // Task input parameter
   0,         // Priority of the task
-  NULL,      // Task handle.
+  &Handle_5000ms,      // Task handle.
   1         // Core where the task should run
   );
 }
@@ -106,10 +110,14 @@ void IRAM_ATTR buttonPress(){
 }
 
 void loop() {
-  vTaskDelay(2000);
   if (button == true){
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_15, RISING);
+    vTaskSuspend(Handle_10ms);
+    vTaskSuspend(Handle_500ms);
+    vTaskSuspend(Handle_1000ms);
+    vTaskSuspend(Handle_5000ms);
     mydisplay_sleep();
+    delay(500);
     esp_deep_sleep_start();
   }
 }
