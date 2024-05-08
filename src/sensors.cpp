@@ -1,4 +1,4 @@
-#include <sensors.h>
+#include "sensors.h"
 
 #define DHTTYPE DHT22
 #define PIN_DHT22 4

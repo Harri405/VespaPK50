@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include <Adafruit_Sensor.h>
-#include <sensors.h>
-#include <display.h>
+#include "sensors.h"
+#include "display.h"
+#include "com.h"
 #define SPLASH_DELAY 2
 
 bool button = false;
@@ -56,6 +57,7 @@ void setup() {
   attachInterrupt(GPIO_NUM_15,buttonPress,RISING);
   display_setup();
   sensors_setup();
+  com_setup_BLE();
   
   xTaskCreatePinnedToCore (
     Task_10ms,     // Function to implement the task
@@ -120,4 +122,6 @@ void loop() {
     delay(500);
     esp_deep_sleep_start();
   }
+  com_loop();
+  vTaskDelay(000);
 }

@@ -2,8 +2,8 @@
 #include <Adafruit_Sensor.h>
 #include <adafruit_GFX.h> 
 #include <Adafruit_SSD1306.h>
-#include <display.h>
-#include <sensors.h>
+#include "display.h"
+#include "sensors.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels

@@ -23,4 +23,4 @@ void print_time();
 void print_dht();
 void print_thermo();
 
-#endif //sensors_H
+#endif //SENSORS_H
